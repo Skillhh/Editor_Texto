@@ -1,8 +1,6 @@
-#!/usr/bin/python3
-
 from tkinter import *
 from tkinter import filedialog as FileDialog
-from io from open
+from io import open
 
 ruta = ""
 
@@ -13,27 +11,55 @@ def nuevo():
 	texto.delete(1.0, "end")
 	root.title("Editor")
 
+
 def abrir():
 	global ruta
 	mensaje.set("Abrir fichero")
 	ruta = FileDialog.askopenfilename(
-		initialdir='.', 
-		filetype=(("Ficheros de Texto","*.txt"),), 
-		title = "Abrir Fichero de Texto")
+		title="Abrir Fichero de Texto", 
+		initialdir=".", 
+		filetypes=(("Ficheros de Texto", "*.txt"),
+			("Ficheros Python", "*.py"),)	
+		)
+
 	if ruta != "":
-		fichero = open(ruta, 'r')
+		fichero = open(ruta, 'r+')
 		contenido = fichero.read()
 		texto.delete(1.0, "end")
 		texto.insert("insert", contenido)
 		fichero.close()
 		root.title(ruta + " - Editor")
 
+
 def guardar():
 	mensaje.set("Guardar fichero")
+	if ruta != "":
+		contenido = texto.get(1.0, "end-1c")
+		fichero = open(rute, "w+")
+		fichero.write(contenido)
+		fichero.close()
+		mensaje.set("Se ha guardado correctamente.")
+	else:
+		guardar_como()
 
 def guardar_como():
+	global ruta
 	mensaje.set("Guardar como")
-
+	fichero = FileDialog.asksaveasfile(
+		title="Guardar Como",
+		mode="w",
+		defaultextension="*.txt"
+	)
+	if fichero is not None:
+		ruta = fichero.name
+		contenido = texto.get(1.0, "end-1c")
+		fichero = open(ruta, "w+")
+		fichero.write(contenido)
+		fichero.close()
+		mensaje.set("Se ha guardado correctamente.")
+	else:
+		mensaje.set("Guardado Cancelado")
+		ruta = ""
 
 # Configuracion Raiz
 root = Tk()
